@@ -12,10 +12,21 @@ class AntStore {
     });
   }
 
+  percentageListener(data, antSelected, odds) {
+    const antListCopy = data.slice();
+    const antList = antListCopy.map(ant => {
+      if (ant.name === antSelected.name) {
+        return antSelected.setOdds(odds).setState('Calculated');
+      }
+      return ant;
+    });
+    return this._sortAntList(antList);
+  }
+
   _transformAntEntityCollection(data = []) {
     const antList = data.flatMap(ant => {
       const {name} = ant;
-      const antObject = new Ant(name, 'Not yet run', 0);
+      const antObject = new Ant(name, 'Not run yet', 0);
       return antObject;
     });
     return antList;
@@ -29,16 +40,7 @@ class AntStore {
     return antList;
   }
 
-  percentageListener(data, antSelected, odds) {
-    const antListCopy = data.slice();
-    const antList = antListCopy.map(ant => {
-      if (ant.name === antSelected.name) {
-        return antSelected.setOdds(odds).setState('Calculated');
-      }
-      return ant;
-    });
-    return this._sortAntList(antList);
-  }
+  
 
   _sortAntList = antList => antList.sort((a, b) => (a.odds < b.odds ? 1 : -1));
 }

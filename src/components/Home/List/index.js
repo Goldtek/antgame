@@ -8,12 +8,12 @@ import {useQuery} from '@apollo/react-hooks';
 import {Spinner} from '../../../custom';
 import {GET_ALL_ANTS} from './query';
 
-const List = () => {
+const List = (props) => {
   const [state, setState] = useState({
     loading: false,
     ants: [],
     calculating: false,
-    antsListStatus: 'Care to make a Blind Bet?',
+    antsListStatus: '',
     err: {},
   });
   const calculated = 0;
@@ -108,49 +108,49 @@ const List = () => {
   const _renderItem = ({item}) => {
     let backgroundColor = item.selected ? '#000' : '#feffea';
     console.log('item', item);
-    // return (
-    //   <AntCard
-    //     ant={item}
-    //     checkMarkStyle={{backgroundColor}}
-    //     onPress={ant => {
-    //       // Objective: find the ant item, make it selected
-    //       if (ant.selected) {
-    //         let ants = state.ants;
-    //         ants.forEach((a, index) => {
-    //           // change object in array
-    //           // replace array with new array
-    //           if (a.name === ant.name) {
-    //             // if a match... replace it
-    //             a.selected = false;
-    //             ants[index] = a;
-    //             setState({ants});
-    //             // this.props.selectedAnt(ants);
-    //           }
-    //         });
-    //       } else {
-    //         let ants = state.ants;
-    //         ants.forEach((a, index) => {
-    //           // change object in array
-    //           // replace array with new array
-    //           if (a.name === ant.name) {
-    //             // if a match... replace it
-    //             a.selected = true;
-    //             ants[index] = a;
-    //           } else {
-    //             a.selected = false;
-    //             ants[index] = a;
-    //           }
+    return (
+      <AntCard
+        ant={item}
+        checkMarkStyle={{backgroundColor}}
+        onPress={ant => {
+          // find the ant item, make it selected
+          if (ant.selected) {
+            let ants = state.ants;
+            ants.forEach((a, index) => {
+              // change object in array
+              // replace array with new array
+              if (a.name === ant.name) {
+                // if a match... replace it
+                a.selected = false;
+                ants[index] = a;
+                setState({ants});
+                props.selectedAnt(ants);
+              }
+            });
+          } else {
+            let ants = state.ants;
+            ants.forEach((a, index) => {
+              // change object in array
+              // replace array with new array
+              if (a.name === ant.name) {
+                // if a match... replace it
+                a.selected = true;
+                ants[index] = a;
+              } else {
+                a.selected = false;
+                ants[index] = a;
+              }
 
-    //           setState({ants});
-    //           // this.props.selectedAnt(ants);
-    //         });
-    //       }
-    //     }}
-    //   />
-    // );
+              setState({ants});
+              props.selectedAnt(ants);
+            });
+          }
+        }}
+      />
+    );
   };
 
-  const _keyExtractor = (item: Ant, index: number) => item.name;
+  const _keyExtractor = (item, index) => item.name;
 
   const renderAnts = () => {
     const {antsListStatus, ants} = state;
@@ -162,7 +162,7 @@ const List = () => {
     if (!orderedAnts || orderedAnts.length < 1) {
       return (
         <View style={{alignSelf: 'center', marginTop: moderateScale(30)}}>
-          <Text>There's a 5 ant pileup on the track</Text>
+          <Text>There are 5 ant piledup on the track</Text>
         </View>
       );
     }
